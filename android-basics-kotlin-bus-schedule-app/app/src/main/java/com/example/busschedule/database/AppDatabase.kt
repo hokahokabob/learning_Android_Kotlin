@@ -10,9 +10,9 @@ import com.example.busschedule.database.schedule.ScheduleDao
 /**
  * データベース クラスを使用すると、他のクラスが DAO クラスに簡単にアクセスできます
  */
-@Database(entities = arrayOf(Schedule::class), version = 1)
+@Database(entities = arrayOf(Schedule::class), version = 1, exportSchema = false)
 abstract class AppDatabase: RoomDatabase() {
-    abstract  fun scheduleDao(): ScheduleDao
+    abstract fun scheduleDao(): ScheduleDao
 
     companion object {
         //参考：https://zenn.dev/yass97/articles/ac5f7b0320edc8
