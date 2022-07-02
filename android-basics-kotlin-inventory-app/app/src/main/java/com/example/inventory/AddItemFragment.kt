@@ -21,6 +21,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -73,8 +74,26 @@ class AddItemFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.saveAction.setOnClickListener {
-            this.addNewItem()
+        val id = navigationArgs.itemId
+        if(id > 0) {//編集の場合
+            this.viewModel.retrieveItem(id).observe(this.viewLifecycleOwner) { selectedItem ->
+                this.item = selectedItem
+                this.bind(item)
+            }
+        } else {//New
+            binding.saveAction.setOnClickListener {
+                this.addNewItem()
+            }
+        }
+    }
+
+    private fun bind(item: Item) {
+        val price = "%.2f".format(item.itemPrice)
+        binding.apply {
+            this.itemName.setText(item.itemName, TextView.BufferType.SPANNABLE)
+            this.itemPrice.setText(price, TextView.BufferType.SPANNABLE)
+            this.itemCount.setText(item.quantityInStock.toString(), TextView.BufferType.SPANNABLE)
+            this.saveAction.setOnClickListener { updateItem() }
         }
     }
 
@@ -92,6 +111,19 @@ class AddItemFragment : Fragment() {
                 binding.itemName.text.toString(),
                 binding.itemPrice.text.toString(),
                 binding.itemCount.text.toString(),
+            )
+        }
+        val action = AddItemFragmentDirections.actionAddItemFragmentToItemListFragment()
+        findNavController().navigate(action)
+    }
+
+    private fun updateItem() {
+        if(this.isEntryValid()) {
+            this.viewModel.updateItem(
+                navigationArgs.itemId,
+                this.binding.itemName.text.toString(),
+                this.binding.itemPrice.text.toString(),
+                this.binding.itemCount.text.toString()
             )
         }
         val action = AddItemFragmentDirections.actionAddItemFragmentToItemListFragment()

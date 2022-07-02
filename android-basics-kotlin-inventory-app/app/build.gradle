@@ -18,12 +18,12 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
-    id 'androidx.navigation.safeargs'//.kotlinを消した(M1 macのため)
+    id 'androidx.navigation.safeargs.kotlin'//.kotlinを消した(M1 macのため)
 }
 
 android {
     compileSdkVersion 31
-    buildToolsVersion "30.0.3"
+    buildToolsVersion "31.0.0"
 
     defaultConfig {
         applicationId "com.example.inventory"
